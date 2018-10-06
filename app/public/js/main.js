@@ -48,10 +48,12 @@ const refreshEvents = (oAuthKey) => {
   });
 }; 
 
+const handleRefreshClick = () => {
+  const oAuthKey = $('#oauth').val();
+  refreshEvents(oAuthKey);
+};
+
 $(() => {
-  // $('#refresh').click(() => setInterval(refreshEvents, 3000));
-  $('#refresh').click(() => {
-    const oAuthKey = $('#oauth').val();
-    refreshEvents(oAuthKey);
-  });
+  $('#refresh').click(() => setInterval(handleRefreshClick, 3000));
+  // $('#refresh').click(handleRefreshClick);
 });
