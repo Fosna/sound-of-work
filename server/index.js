@@ -1,6 +1,7 @@
 #!/usr/bin/env nodejs
 
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var request = require("request");  // To make HTTP requests at the server side
 
@@ -28,6 +29,7 @@ else
 
 // Apply security middlewares
 app.use(helmet());
+app.use(bodyParser.json());
 
 // Remove x-powered-by header
 app.disable('x-powered-by');
@@ -40,15 +42,22 @@ app.get('/', function (req, res) {
   res.sendFile(path.resolve('app/index.html'));
 });
 
-app.get('/events', function (req, res) {
-    var owner = 'Fosna';
-    var repo = 'git-playground';
-    var oAuthKey = 'afb9b1d7e6740e8243a7a4dc5caf593400dde02a';
+app.get('/monkey', function (req, res) {
+  res.send('monkey' + Date.now());
+});
 
-    fetchDataFromGithub(owner, repo, oAuthKey, function(data) {
-      res.json(data);
-    },
-    function(e) {
+app.post('/events', function (req, res) {
+  var owner = 'Fosna';
+  var repo = 'git-playground';
+
+  const {
+    oAuthKey
+  } = req.body;
+
+  fetchDataFromGithub(owner, repo, oAuthKey, function (data) {
+    res.json(data);
+  },
+    function (e) {
       logger.error(e.toString());
       res.status(500).send(e.message);
     });
@@ -60,7 +69,7 @@ function fetchDataFromGithub(owner, repo, oAuthKey, next, err) {
     url: 'https://api.github.com/repos/Fosna/git-playground/events',
     headers: {
       'User-Agent': 'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36',
-      'Authorization': 'token ' + 'afb9b1d7e6740e8243a7a4dc5caf593400dde02a'
+      'Authorization': `token ${oAuthKey}`
     }
   };
 

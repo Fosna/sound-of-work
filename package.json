@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "start": "node server"
+    "start": "node server",
+    "w": "nodemon server"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/debugger22/github-audio#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "chalk": "^1.1.3",
     "cross-env": "^3.1.2",
     "express": "^4.14.0",

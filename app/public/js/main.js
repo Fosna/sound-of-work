@@ -31,15 +31,27 @@ const storeNewEvents = events => {
   }).filter(x => x);
 };
 
-const refreshEvents = () => {
-  $.getJSON('/events', null, data => {
-    const show = storeNewEvents(data);
-    drawEvents(show); 
-  }).fail(function(e) {
+const refreshEvents = (oAuthKey) => {
+  $.ajax({
+    type: "POST",
+    url: '/events',
+    data: JSON.stringify({ oAuthKey }),
+    success: data => {
+      const show = storeNewEvents(data);
+      drawEvents(show); 
+    },
+    contentType: 'application/json',
+    dataType: 'json'
+  }).
+  fail(function(e) {
     console.error(e);
   });
 }; 
 
 $(() => {
-  $('#refresh').click(() => setInterval(refreshEvents, 3000));
+  // $('#refresh').click(() => setInterval(refreshEvents, 3000));
+  $('#refresh').click(() => {
+    const oAuthKey = $('#oauth').val();
+    refreshEvents(oAuthKey);
+  });
 });
